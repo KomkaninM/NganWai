@@ -2,7 +2,7 @@
 import * as memberModel from '../models/memberModel.js';
 
 // [POST] /api/members/login
-export const login = (req, res) => {
+export const login = async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -10,15 +10,14 @@ export const login = (req, res) => {
     }
 
     try {
-        const member = memberModel.authenticateMember(username, password);
+        const member = await memberModel.authenticateMember(username, password);
 
         if (member) {
-            // ในชีวิตจริง ควรสร้าง JWT Token และส่งกลับไป
             res.status(200).json({ message: "Login successful", user: member });
         } else {
             res.status(401).json({ message: "Invalid credentials" });
         }
     } catch (error) {
-        res.status(500).json({ message: "Error during login.", error });
+        res.status(500).json({ message: "Error during login.", error: error.message });
     }
 };

@@ -1,15 +1,13 @@
 // backend/src/models/memberModel.js
-import { members } from '../config/db.js';
+import { Member } from '../config/db.js';
 
 // ตรวจสอบการ Login
-export function authenticateMember(username, password) {
-    const member = members.find(m => m.username === username && m.password === password);
+export async function authenticateMember(username, password) {
+    const member = await Member.findOne({ username, password }).lean();
+
     if (member) {
-        // คืนค่าข้อมูลผู้ใช้ที่ไม่มี password
         const { password, ...safeMember } = member;
         return safeMember; 
     }
     return null;
 }
-
-// (เพิ่มฟังก์ชันสมัครสมาชิกในอนาคต: createMember)

@@ -1,8 +1,7 @@
-// main.js
-import * as Member from './member2.js';
-import * as Table from './table2.js';
-import * as API from './api2.js';
-import { APP_NAME } from './config2.js';
+// frontend/public/scripts/main.js
+import * as Member from './member.js';
+import * as Table from './table.js';
+import { APP_NAME } from './config.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     document.title = APP_NAME;
@@ -14,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     // 1. Event Listener สำหรับการ Login
-    document.getElementById('login-form').addEventListener('submit', handleLogin);
+    document.getElementById('loginbtn').addEventListener('click', handleLogin);
     
     // 2. Event Listener สำหรับการ Logout
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
@@ -38,17 +37,20 @@ function setupEventListeners() {
 
 // --- ฟังก์ชันการจัดการ Login/Logout ---
 
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
+    console.log("Attempting login for user:", username);
+    console.log("Password entered:", password ? '******' : '(no password)');
+    const success = await Member.login(username, password);
 
-    if (Member.login(username, password)) {
+    if (success) {
         alert("Login สำเร็จ!");
         updateHeaderUI();
-        Table.loadAndRenderTasks(); // อัปเดตบอร์ดเพื่อให้ปุ่มรับงานทำงาน
+        Table.loadAndRenderTasks(); 
     } else {
-        alert("Login ล้มเหลว! ลองกรอกข้อมูลอีกครั้ง");
+        alert("Login ล้มเหลว! ตรวจสอบ Username/Password");
     }
 }
 
@@ -56,7 +58,7 @@ function handleLogout() {
     Member.logout();
     alert("Logout สำเร็จ!");
     updateHeaderUI();
-    Table.loadAndRenderTasks(); // อัปเดตบอร์ดให้ปุ่มรับงานถูกปิดการใช้งาน
+    Table.loadAndRenderTasks(); 
 }
 
 function updateHeaderUI() {
@@ -66,19 +68,13 @@ function updateHeaderUI() {
     const addTaskBtn = document.getElementById('add-task-btn');
 
     if (user) {
-        // แสดงกล่องข้อมูลผู้ใช้
         loginBox.style.display = 'none';
         userInfoBox.style.display = 'flex';
         document.getElementById('user-info-username').textContent = user.username;
-        
-        // แสดงปุ่มเพิ่มงาน
         addTaskBtn.style.display = 'block';
     } else {
-        // แสดงกล่อง Login
         loginBox.style.display = 'flex';
         userInfoBox.style.display = 'none';
-        
-        // ซ่อนปุ่มเพิ่มงาน
         addTaskBtn.style.display = 'none';
     }
 }
@@ -91,7 +87,7 @@ function openAddTaskModal() {
 
 function closeAddTaskModal() {
     document.getElementById('add-task-modal').style.display = 'none';
-    document.getElementById('add-task-form').reset(); // ล้างฟอร์ม
+    document.getElementById('add-task-form').reset(); 
 }
 
 async function handleAddTask(event) {
@@ -107,14 +103,14 @@ async function handleAddTask(event) {
         location: document.getElementById('task-location').value,
         fee: parseInt(document.getElementById('task-fee').value),
         deadline: document.getElementById('task-deadline').value,
-        postedBy: user.username // ผู้โพสคือผู้ที่ Login อยู่
+        postedBy: user.username 
     };
 
     try {
         await API.addTask(newTask);
         alert("งานถูกโพสเรียบร้อยแล้ว!");
         closeAddTaskModal();
-        Table.loadAndRenderTasks(); // โหลดบอร์ดใหม่เพื่อแสดงงานที่เพิ่ม
+        Table.loadAndRenderTasks(); 
     } catch (error) {
         alert("ไม่สามารถเพิ่มงานได้: " + error.message);
     }

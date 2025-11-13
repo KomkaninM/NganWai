@@ -2,18 +2,17 @@
 import * as itemModel from '../models/itemModel.js';
 
 // [GET] /api/tasks
-export const getTasks = (req, res) => {
+export const getTasks = async (req, res) => {
     try {
-        const openTasks = itemModel.getAllOpenTasks();
-        // Frontend ต้องการเฉพาะงานที่ยังเปิดอยู่
+        const openTasks = await itemModel.getAllOpenTasks();
         res.status(200).json(openTasks);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching tasks", error });
+        res.status(500).json({ message: "Error fetching tasks", error: error.message });
     }
 };
 
 // [POST] /api/tasks
-export const addTask = (req, res) => {
+export const addTask = async (req, res) => {
     const { title, location, fee, deadline, postedBy } = req.body;
 
     if (!title || !location || !fee || !deadline || !postedBy) {
@@ -21,17 +20,16 @@ export const addTask = (req, res) => {
     }
 
     try {
-        const newTask = itemModel.createNewTask({ title, location, fee: parseInt(fee), deadline, postedBy });
+        const newTask = await itemModel.createNewTask({ title, location, fee: parseInt(fee), deadline, postedBy });
         res.status(201).json(newTask);
     } catch (error) {
-        res.status(500).json({ message: "Error adding new task.", error });
+        res.status(500).json({ message: "Error adding new task.", error: error.message });
     }
 };
 
 // [POST] /api/tasks/:id/take
-export const takeTask = (req, res) => {
+export const takeTask = async (req, res) => {
     const { id } = req.params;
-    // ในชีวิตจริง ควรดึง workerUsername จาก token/session
     const { workerUsername } = req.body; 
 
     if (!workerUsername) {
@@ -39,7 +37,7 @@ export const takeTask = (req, res) => {
     }
 
     try {
-        const takenTask = itemModel.takeTaskById(id, workerUsername);
+        const takenTask = await itemModel.takeTaskById(id, workerUsername);
 
         if (!takenTask) {
             return res.status(404).json({ message: "Task not found or already taken." });
@@ -47,6 +45,6 @@ export const takeTask = (req, res) => {
 
         res.status(200).json({ message: "Task successfully taken.", task: takenTask });
     } catch (error) {
-        res.status(500).json({ message: "Error taking task.", error });
+        res.status(500).json({ message: "Error taking task.", error: error.message });
     }
 };

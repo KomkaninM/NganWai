@@ -1,6 +1,6 @@
-// table.js
-import * as API from './api2.js';
-import * as Member from './member2.js';
+// frontend/public/scripts/table.js
+import * as API from './api.js';
+import * as Member from './member.js';
 
 /**
  * สร้างและแสดงตารางงาน
@@ -8,7 +8,7 @@ import * as Member from './member2.js';
  */
 export function renderTaskBoard(tasks) {
     const boardContainer = document.getElementById('task-board-container');
-    boardContainer.innerHTML = ''; // ล้างบอร์ดเก่า
+    boardContainer.innerHTML = ''; 
 
     const table = document.createElement('table');
     table.classList.add('task-table');
@@ -31,14 +31,17 @@ export function renderTaskBoard(tasks) {
 
     tasks.forEach(task => {
         const row = document.createElement('tr');
+        // task._id มาจาก MongoDB
+        const taskId = task._id || task.id; 
+        
         row.innerHTML = `
             <td>${task.title}</td>
             <td>${task.location}</td>
             <td>${task.fee}</td>
-            <td>${task.deadline}</td>
+            <td>${new Date(task.deadline).toLocaleDateString('th-TH')}</td>
             <td>${task.postedBy}</td>
             <td>
-                <button class="take-job-btn" data-task-id="${task.id}" ${user ? '' : 'disabled'}>รับงาน</button>
+                <button class="take-job-btn" data-task-id="${taskId}" ${user ? '' : 'disabled'}>รับงาน</button>
             </td>
         `;
         tbody.appendChild(row);
@@ -50,11 +53,17 @@ export function renderTaskBoard(tasks) {
     document.querySelectorAll('.take-job-btn').forEach(button => {
         button.addEventListener('click', handleTakeJob);
     });
+    
+    // แสดงข้อความเมื่อไม่มีงาน
+    if (tasks.length === 0) {
+        boardContainer.innerHTML = '<p class="no-tasks-message">🎉 ไม่มีงานที่เปิดรับตอนนี้!</p>';
+    }
 }
 
 // จัดการการกดปุ่ม "รับงาน"
 async function handleTakeJob(event) {
-    const taskId = parseInt(event.target.dataset.taskId);
+    // MongoDB ID เป็น string
+    const taskId = event.target.dataset.taskId; 
     const user = Member.getCurrentUser();
     
     if (!user) {
@@ -63,8 +72,10 @@ async function handleTakeJob(event) {
     }
 
     try {
-        await API.takeTask(taskId, user.username);
-        alert(`รับงาน "${taskId}" เรียบร้อยแล้ว!`);
+        // ใช้ user.username เป็น workerUsername
+        await API.takeTask(taskId, user.username); 
+        alert(`รับงาน "${taskId}" เรียบร้อยแล้ว! งานนี้ถูกนำออกจากบอร์ดแล้ว`);
+        
         // โหลดบอร์ดใหม่เพื่อให้งานที่รับหายไป
         loadAndRenderTasks(); 
     } catch (error) {
@@ -74,6 +85,11 @@ async function handleTakeJob(event) {
 
 // โหลดงานจาก API และแสดงผล
 export async function loadAndRenderTasks() {
-    const tasks = await API.fetchAllTasks();
-    renderTaskBoard(tasks);
+    try {
+        const tasks = await API.fetchAllTasks();
+        renderTaskBoard(tasks);
+    } catch (error) {
+        document.getElementById('task-board-container').innerHTML = `<p class="error-message">❌ ไม่สามารถโหลดงานได้: ตรวจสอบ Backend (พอร์ต 3000) และการเชื่อมต่ออินเทอร์เน็ต</p>`;
+        console.error("Load tasks error:", error);
+    }
 }

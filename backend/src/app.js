@@ -7,9 +7,9 @@ import memberRoutes from './routes/memberRoute.js';
 const app = express();
 
 // Middleware
-// อนุญาตให้ Frontend (ซึ่งอาจรันบนพอร์ตอื่น) เรียกใช้ API ได้
-app.use(cors({ origin: 'http://localhost:3221' })); // หรือพอร์ตที่คุณรัน Frontend
-app.use(express.json()); // สำหรับอ่าน JSON ใน Body
+// อนุญาตให้ Frontend ที่รันบนพอร์ต 32317 เข้าถึงได้
+app.use(cors({ origin: 'http://localhost:3221' })); 
+app.use(express.json()); 
 
 // Routes
 app.use('/api/tasks', itemRoutes);
