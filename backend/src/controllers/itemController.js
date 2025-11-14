@@ -1,50 +1,77 @@
-// backend/src/controllers/itemController.js
-import * as itemModel from '../models/itemModel.js';
+import Item from "../models/itemModel.js";
 
-// [GET] /api/tasks
-export const getTasks = async (req, res) => {
-    try {
-        const openTasks = await itemModel.getAllOpenTasks();
-        res.status(200).json(openTasks);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching tasks", error: error.message });
+/** @type {import("express").RequestHandler} */
+export const createItem = async (req, res) => {
+  try {
+    const newItem = new Item(req.body);
+    await newItem.save();
+
+    res.status(200).json({ message: "OK" });
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      res.status(400).json({ error: "Bad Request" });
+    } else {
+      res.status(500).json({ error: "Internal server error." });
     }
+  }
 };
 
-// [POST] /api/tasks
-export const addTask = async (req, res) => {
-    const { title, location, fee, deadline, postedBy } = req.body;
+/** @type {import("express").RequestHandler} */
+export const getItems = async (req, res) => {
+  const items = await Item.find();
 
-    if (!title || !location || !fee || !deadline || !postedBy) {
-        return res.status(400).json({ message: "Missing required task fields." });
-    }
-
-    try {
-        const newTask = await itemModel.createNewTask({ title, location, fee: parseInt(fee), deadline, postedBy });
-        res.status(201).json(newTask);
-    } catch (error) {
-        res.status(500).json({ message: "Error adding new task.", error: error.message });
-    }
+  res.status(200).json(items);
 };
 
-// [POST] /api/tasks/:id/take
-export const takeTask = async (req, res) => {
-    const { id } = req.params;
-    const { workerUsername } = req.body; 
+/** @type {import("express").RequestHandler} */
+export const deleteItem = async (req, res) => {
+  // TODO2: implement this function
+  // HINT: you can serve the internet and find what method to use for deleting item.
+  // res.status(501).send("Unimplemented");
+  try {
+     const { id } = req.params;
 
-    if (!workerUsername) {
-        return res.status(400).json({ message: "Worker username is required." });
+     if (!id){
+      return res.status(400).json({error : "Missing item ID"});
+     }
+
+     const deletedItem = await Item.findByIdAndDelete(id);
+     
+     if (!deletedItem) {
+      return res.status(404).json({error : "Item not found"});
+     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error: "Internal server error."});
+  }
+};
+
+/** @type {import("express").RequestHandler} */
+export const filterItems = async (req, res) => {
+  // TODO3: implement this filter function
+  // WARNING: you are not allowed to query all items and do something to filter it afterward.
+  // Otherwise, you will be punished by -0.5 scores for this part
+  // res.status(501).send("Unimplemented");
+  try {
+    console.log("filter name:", req.query.name);
+    const { name, minPrice, maxPrice} = req.query;
+
+    const query = {};
+
+    if (name && name !== "ทั้งหมด") {
+      query.name = name;
     }
 
-    try {
-        const takenTask = await itemModel.takeTaskById(id, workerUsername);
-
-        if (!takenTask) {
-            return res.status(404).json({ message: "Task not found or already taken." });
-        }
-
-        res.status(200).json({ message: "Task successfully taken.", task: takenTask });
-    } catch (error) {
-        res.status(500).json({ message: "Error taking task.", error: error.message });
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
     }
+
+    const items = await Item.find(query);
+    res.status(200).json(items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error." });
+  }
 };

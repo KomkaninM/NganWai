@@ -1,36 +1,55 @@
-// frontend/public/scripts/member.js
-import * as API from './api.js'; 
+import { createMember, deleteMember, getMembers } from "./api.js";
+import { MEMBERS } from "./config.js";
+import { fetchAndDrawTable } from "./table.js";
 
-let currentUser = null; 
+export async function populateMembers() {
+  const memberList = document.getElementById("member-list");
+  const nameSelect = document.getElementById("name-to-add");
+  const filterSelect = document.getElementById("filter-name");
 
-// ฟังก์ชัน Login ใช้ API จริง
-export async function login(username, password) {
-    try {
-        const response = await API.login(username, password);
-        currentUser = response.user; 
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        return true;
-    } catch (error) {
-        console.error("Login Error:", error);
-        return false;
-    }
+  memberList.innerHTML = "";
+  nameSelect.innerHTML = '<option value="0">-- เลือกผู้ฝากซื้อ --</option>';
+  filterSelect.innerHTML = '<option value="ทั้งหมด">-- ทั้งหมด --</option>';
+
+  // TODO4: you may have to change from MEMBERS to something while doing the outstanding part.
+  const members = await getMembers();
+
+  members.forEach((member) => {
+    const li = document.createElement("li");
+    li.textContent = member.name;
+    const button = document.createElement("button");
+    button.addEventListener("click", () => handleDeleteMember(member._id));
+    button.innerText = "ไล่";
+
+    const div = document.createElement("div");
+    div.appendChild(li);
+    div.appendChild(button);
+    memberList.appendChild(div);
+
+    const option = document.createElement("option");
+    option.value = option.textContent = member.name;
+    nameSelect.appendChild(option);
+  });
+
+  members.forEach((member) => {
+    const option = document.createElement("option");
+    option.value = option.textContent = member.name;
+    filterSelect.appendChild(option);
+  });
 }
 
-// ฟังก์ชัน Logout 
-export function logout() {
-    currentUser = null;
-    localStorage.removeItem('currentUser');
+export async function handleCreateMember() {
+  const nameToAdd = document.getElementById("member-name-to-add");
+
+  await createMember({ name: nameToAdd.value });
+  await fetchAndDrawTable();
+  await populateMembers();
+
+  nameToAdd.value = "";
 }
 
-// ตรวจสอบสถานะการ Login 
-export function getCurrentUser() {
-    if (currentUser) {
-        return currentUser;
-    }
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-        currentUser = JSON.parse(storedUser);
-        return currentUser;
-    }
-    return null;
+export async function handleDeleteMember(id) {
+  await deleteMember(id);
+  await fetchAndDrawTable();
+  await populateMembers();
 }

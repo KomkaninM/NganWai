@@ -1,24 +1,20 @@
-// backend/src/models/itemModel.js
-import { Task, TASK_STATUS } from '../config/db.js';
+import mongoose from "mongoose";
 
-// ดึงงานทั้งหมดที่ยัง "Open"
-export async function getAllOpenTasks() {
-    return await Task.find({ status: TASK_STATUS.OPEN }).lean(); 
-}
+const itemSchema = new mongoose.Schema({
+  item: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+});
 
-// เพิ่มงานใหม่
-export async function createNewTask(taskData) {
-    const newTask = await Task.create(taskData);
-    return newTask;
-}
+const Item = mongoose.model("Item", itemSchema);
 
-// รับงาน (เปลี่ยนสถานะเป็น Taken)
-export async function takeTaskById(id, workerUsername) {
-    const taskToTake = await Task.findOneAndUpdate(
-        { _id: id, status: TASK_STATUS.OPEN }, 
-        { status: TASK_STATUS.TAKEN, takenBy: workerUsername },
-        { new: true } 
-    );
-
-    return taskToTake; 
-}
+export default Item;

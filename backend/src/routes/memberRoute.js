@@ -1,10 +1,11 @@
-// backend/src/routes/memberRoute.js
-import express from 'express';
-import * as memberController from '../controllers/memberController.js';
+import express from "express";
+
+import * as memberController from "../controllers/memberController.js";
 
 const router = express.Router();
 
-// POST /api/members/login
-router.post('/login', memberController.login);
+router.get("/", memberController.getMembers);
+router.post("/", memberController.createMember);
+router.delete("/:id", memberController.deleteMember);
 
 export default router;

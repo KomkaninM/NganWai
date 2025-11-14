@@ -1,23 +1,23 @@
-// backend/src/app.js
-import express from 'express';
-import cors from 'cors';
-import itemRoutes from './routes/itemRoute.js';
-import memberRoutes from './routes/memberRoute.js';
+import express from "express";
+import cors from "cors";
+
+import userRoute from "./routes/userRoute.js";
+import MemberRoute from "./routes/memberRoute.js";
+import taskRoute from "./routes/taskRoute.js";
 
 const app = express();
 
-// Middleware
-// อนุญาตให้ Frontend ที่รันบนพอร์ต 32317 เข้าถึงได้
-app.use(cors({ origin: 'http://localhost:3221' })); 
-app.use(express.json()); 
+// body-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use('/api/tasks', itemRoutes);
-app.use('/api/members', memberRoutes);
+// allow request from other origin (Frontend which is at different port)
+app.use(cors());
 
-// Health Check Route
-app.get('/', (req, res) => {
-    res.status(200).send('Quick Task Finder API is operational.');
-});
+// use routes
+app.use("/users", userRoute);
+app.use("/tasks", taskRoute);
+
+
 
 export default app;

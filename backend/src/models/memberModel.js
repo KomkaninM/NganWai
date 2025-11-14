@@ -1,13 +1,13 @@
-// backend/src/models/memberModel.js
-import { Member } from '../config/db.js';
+import mongoose from "mongoose";
 
-// ตรวจสอบการ Login
-export async function authenticateMember(username, password) {
-    const member = await Member.findOne({ username, password }).lean();
+const memberSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
 
-    if (member) {
-        const { password, ...safeMember } = member;
-        return safeMember; 
-    }
-    return null;
-}
+const Member = mongoose.model("Member", memberSchema);
+
+export default Member;

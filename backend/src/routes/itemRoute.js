@@ -1,16 +1,14 @@
-// backend/src/routes/itemRoute.js
-import express from 'express';
-import * as itemController from '../controllers/itemController.js';
+import express from "express";
+
+import * as itemController from "../controllers/itemController.js";
 
 const router = express.Router();
 
-// GET /api/tasks - ดึงงานทั้งหมดที่เปิดรับ
-router.get('/', itemController.getTasks);
+router.get("/filter", itemController.filterItems);
+router.get("/", itemController.getItems);
+router.post("/", itemController.createItem);
+router.delete("/:id", itemController.deleteItem);
+// TODO3: add a router for the filter function
 
-// POST /api/tasks - เพิ่มงานใหม่
-router.post('/', itemController.addTask);
-
-// POST /api/tasks/:id/take - รับงาน
-router.post('/:id/take', itemController.takeTask);
 
 export default router;
