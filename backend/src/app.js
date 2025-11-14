@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 
 import userRoute from "./routes/userRoute.js";
-import MemberRoute from "./routes/memberRoute.js";
 import taskRoute from "./routes/taskRoute.js";
 
 const app = express();

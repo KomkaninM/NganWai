@@ -17,6 +17,10 @@ const TaskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  user:{
+    type: String,
+    require: true,
+  },
 });
 
 const Task = mongoose.model("Task", TaskSchema);

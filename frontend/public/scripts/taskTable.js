@@ -41,7 +41,7 @@ export function renderTaskBoard(tasks) {
             <td>${task.location}</td>
             <td>${task.fee}</td>
             <td>${new Date(task.deadline).toLocaleDateString('th-TH')}</td>
-            <td>${task.owner ?? 'ไม่ระบุ'}</td>
+            <td>${task.user ?? 'ไม่ระบุ'}</td>
 
             <td>
                 <button class="take-job-btn" data-id="${task._id}">

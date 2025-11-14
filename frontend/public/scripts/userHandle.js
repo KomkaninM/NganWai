@@ -49,5 +49,5 @@ export async function handleUserLogout() {
 }
 
 export function getCurrentUser() {
-    return currentUser;
+    return currentUser.username;
 }
