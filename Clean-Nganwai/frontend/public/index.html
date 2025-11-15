@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NganWai - Delivery System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>NganWai Delivery</h1>
+    <button id="open-register-btn" class="btn-primary">Register</button>
+  </header>
+
+  <main>
+    <p>Welcome! Please register to start using the system.</p>
+  </main>
+
+  <!-- REGISTER POPUP -->
+  <div id="register-modal" class="modal hidden">
+    <div class="modal-content">
+      <span id="close-register-modal" class="close-btn">&times;</span>
+      <h2>Register</h2>
+
+      <form id="register-form">
+
+        <label>Student ID</label>
+        <input type="text" id="reg-studentID" required />
+
+        <label>Password</label>
+        <input type="password" id="reg-password" required />
+
+        <label>Phone Number</label>
+        <input type="text" id="reg-phone" required />
+
+        <label>Faculty</label>
+        <select id="reg-faculty" required>
+          <option value="">Select Faculty</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Science">Science</option>
+          <option value="Political Science">Political Science</option>
+          <option value="Commerce">Commerce & Accountancy</option>
+          <option value="Arts">Arts</option>
+          <option value="Economics">Economics</option>
+          <option value="Communication Arts">Communication Arts</option>
+          <option value="Architecture">Architecture</option>
+          <option value="Education">Education</option>
+        </select>
+
+        <label>Year</label>
+        <select id="reg-year" required>
+          <option value="">Select Year</option>
+          <option value="1">Year 1</option>
+          <option value="2">Year 2</option>
+          <option value="3">Year 3</option>
+          <option value="4">Year 4</option>
+          <option value="5">Year 5</option>
+          <option value="6">Year 6</option>
+        </select>
+
+        <button type="submit" class="btn-primary">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script type="module" src="./scripts/main/app.js"></script>
+</body>
+</html>
