@@ -1,4 +1,4 @@
-import { createUser, getUser} from "./api.js";
+import { createUser, getUser,login} from "./api.js";
 
 let currentUser = null; 
 
@@ -23,21 +23,31 @@ export async function handleSigninUser(){
   const password = document.getElementById("login-password").value;
   const usernameElement = document.getElementById("user-info-username");
 
-  const users = await getUser(); // fetch users from backend
-  const foundUser = users.find(u => u.username === username && u.password === password);
-
-  if(foundUser){
-    alert("Welcome Back!");
-    currentUser = foundUser;
-    // Show main content / hide login box if needed
-    document.querySelector(".main-content").style.display = "block";
-    document.getElementById("login-box").style.display = "none";
-    document.getElementById("user-info-box").style.display = "block";
-    document.getElementById("add-task-btn").style.display = "block";
-    usernameElement.textContent = foundUser.username;
-  }else{
-    alert("Wrong username/password!");
+  if (!username || !password) {
+    alert("Please enter username/password!");
+    return;
   }
+
+  const result = await login(username, password);
+
+  if (result.error) {
+    alert(result.error);
+    return;
+  }
+
+  // Login success
+  alert("Welcome Back!");
+
+  currentUser = result.user; // set current user
+  localStorage.setItem("token", result.token); // save token
+
+  // Update UI
+  document.querySelector(".main-content").style.display = "block";
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("user-info-box").style.display = "block";
+  document.getElementById("add-task-btn").style.display = "block";
+
+  usernameElement.textContent = result.user.username;
 }
 
 export async function handleUserLogout() {

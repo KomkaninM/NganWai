@@ -1,3 +1,5 @@
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
 
 /** @type {import("express").RequestHandler} */
@@ -13,7 +15,12 @@ export const getUser = async (req, res) => {
 /** @type {import("express").RequestHandler} */
 export const createUser = async (req, res) => {
   try {
-    const newUser = new User(req.body);
+    const {username,password} = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+     const newUser = new User({
+      username: username,
+      password: hashedPassword,
+    });
     await newUser.save();
 
     res.status(200).json({ message: "OK" });
@@ -23,6 +30,38 @@ export const createUser = async (req, res) => {
     } else {
       res.status(500).json({ error: "Internal server error." });
     }
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ username });
+    if (!user) return res.status(400).json({ error: "User not found." });
+
+    // Compare password
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) return res.status(400).json({ error: "Invalid password." });
+
+    // Generate JWT (optional but recommended)
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    res.status(200).json({
+      message: "Login successful",
+      token,        // return token to frontend
+      user: {
+        id: user._id,
+        username: user.username,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
