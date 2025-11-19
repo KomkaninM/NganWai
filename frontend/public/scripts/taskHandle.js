@@ -3,7 +3,7 @@ import {loadAndRenderTasks} from "./taskTable.js";
 import { getCurrentUser } from "./userHandle.js";
 
 export async function handleAddTaskbtn() {
-  document.querySelector(".modal").style.display = "block";
+  document.querySelector(".modal").style.display = "flex";
 }
 
 export async function handlecloseModalbtn() {

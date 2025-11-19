@@ -96,7 +96,7 @@ export async function loadAndRenderTasks() {
     } catch (error) {
         document.getElementById('task-board-container').innerHTML = `
             <p class="error-message">
-                ❌ ไม่สามารถโหลดงานได้: ตรวจสอบ Backend ว่ารันพอร์ต 3000 อยู่หรือไม่
+                ❌ ไม่สามารถโหลดงานได้: ตรวจสอบ Backend ว่ารันพอร์ต 3222 อยู่หรือไม่
             </p>`;
         console.error("Load tasks error:", error);
     }

@@ -5,6 +5,7 @@ let currentUser = null;
 export async function handleCreateUser() {
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
+  document.getElementById("login-form").reset();
   const payload = {username,password};
   const users = await getUser();
   const foundUser = users.find(user => user.username === username);
@@ -21,6 +22,7 @@ export async function handleCreateUser() {
 export async function handleSigninUser(){
   const username = document.getElementById("login-username").value;
   const password = document.getElementById("login-password").value;
+  document.getElementById("login-form").reset();
   const usernameElement = document.getElementById("user-info-username");
 
   if (!username || !password) {
