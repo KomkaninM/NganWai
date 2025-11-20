@@ -34,6 +34,17 @@ export async function createUser(user) {
   });
 }
 
+export async function updateUser(id, updatedData) {
+  return fetch(`${BACKEND_URL}/users/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updatedData),
+  }).then((r) => r.json());
+}
+
 export async function getTask() {
   return fetch(`${BACKEND_URL}/tasks`, {
     headers: { Authorization: `Bearer ${token}` },

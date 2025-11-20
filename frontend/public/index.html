@@ -10,9 +10,13 @@
 
     <header class="header">
         <h1>NGAN WAI</h1>
+        
         <div id="user-info-box" class="header-item user-info-box" style="display:none;">
-            <p>สวัสดี, <strong id="user-info-username"></strong>!</p>
-            <button id="logout-btn" class="secondary-btn">Logout</button>
+            <p>Welcome Back, <strong id="user-info-username"></strong>!</p>
+            <div class="user-actions">
+                <button id="changepass-btn" class="secondary-btn small-btn">Change Password</button>
+                <button id="logout-btn" class="secondary-btn small-btn">Logout</button>
+            </div>
         </div>
 
         <button id="add-task-btn" class="header-item primary-btn add-task-btn" style="display:none;">
@@ -21,7 +25,7 @@
     </header>
 
     <main class="main-content">
-        <h2>🔥 งานที่เปิดรับตอนนี้</h2>
+        <h2>Available Task</h2>
         <div id="task-board-container" class="task-board-container">
             </div>
     </main>
@@ -31,10 +35,10 @@
             <h2>NGAN WAI</h2>
             <form id="login-form">
                 <label for="login-username">Username</label>
-                <input type="text" id="login-username"required>
+                <input type="text" id="login-username" required>
                 <label for="login-password">Password</label>
-                <input type="password" id="login-password"required>
-                <button type="submit" id="loginbtn">Login</button>
+                <input type="password" id="login-password" required>
+                <button type="submit" id="loginbtn">Log in</button>
                 <button type="button" id="signupbtn">Sign up</button>
             </form>
         </div>
@@ -48,7 +52,7 @@
                 <label for="task-title">ชื่องาน (ต้องทำอะไรบ้าง):</label>
                 <input type="text" id="task-title" required>
 
-                <label for="task-location">สถานที่:</label>
+                <label for="task-location">ตำแหน่งงาน:</label>
                 <input type="text" id="task-location" required>
 
                 <label for="task-fee">ค่าจ้าง (บาท):</label>
@@ -57,8 +61,21 @@
                 <label for="task-deadline">กำหนดส่งงาน:</label>
                 <input type="date" id="task-deadline" required>
 
+                <label for="task-description">คำอธิบายเพิ่มเติม:</label>
+                <input type="text" id="task-description">
+
                 <button type="submit" id="task-from" class="primary-btn">โพสงาน</button>
             </form>
+        </div>
+    </div>
+
+    <div id="task-description-modal" class="des">
+        <div id="task-descrpiption-container" class="modal-content">
+            <span class="close-btn" id="close-description-btn">&times;</span>
+            <h3>เปลี่ยนรหัสผ่าน</h3>
+            <label for="change-password">New Password:</label>
+            <input type="password" id="change-password" required>
+            <button id="change-btn" type="submit" class="secondary-btn" style="width:100%; margin-top:15px;">ยืนยันการเปลี่ยน</button>
         </div>
     </div>
 

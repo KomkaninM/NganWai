@@ -2,18 +2,15 @@
    Global Colors & Variables
 --------------------------------------------- */
 :root {
-    --primary-color: #4C6EF5;   /* Blue-purple */
+    --primary-color: #4C6EF5;
     --secondary-color: #868e96;
     --success-color: #37b24d;
-
     --bg-color: #b3e2f8;
     --card-bg: #ffffff;
     --border-color: #e1e4e8;
-
     --radius-lg: 16px;
     --radius-md: 10px;
     --radius-sm: 6px;
-
     --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.08);
     --shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
@@ -24,16 +21,17 @@ body {
     margin: 0;
     padding: 0;
     color: #2d3436;
+    overflow-x: hidden; 
 }
 
 /* ---------------------------------------------
-   Header
+   Header (Desktop Default)
+   ตั้งค่าให้เรียงแนวนอนเป็นหลัก
 --------------------------------------------- */
 .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* ซ้าย-ขวา แยกกัน */
     align-items: center;
-
     background: var(--card-bg);
     padding: 18px 35px;
     box-shadow: var(--shadow-sm);
@@ -42,53 +40,55 @@ body {
 }
 
 .header h1 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     font-size: 1.8em;
     font-weight: 700;
     color: var(--primary-color);
     margin: 0;
-}
-
-.header h4 {
+    /* เทคนิคจัดกึ่งกลางสำหรับ PC */
     position: absolute;
-    top: 55px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.8em;
-    color: #6c757d;
-    margin: 0;
 }
 
 /* ---------------------------------------------
-   User Info & Add Task Button
+   User Info & Buttons
 --------------------------------------------- */
 .user-info-box {
     display: flex;
     align-items: center;
-    gap: 12px;
-
+    gap: 15px;
     padding: 8px 15px;
     border-radius: var(--radius-md);
     background: #edf2ff;
     color: #364fc7;
     font-weight: 600;
-
     box-shadow: var(--shadow-sm);
 }
 
+.user-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.small-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+}
+
+/* ปุ่มเพิ่มงาน (Desktop: ขนาดตามตัวอักษร) */
 .add-task-btn {
+    width: auto; 
     padding: 12px 20px;
     font-size: 1rem;
     border-radius: var(--radius-md);
+    white-space: nowrap;
 }
 
 /* ---------------------------------------------
-   Main Content
+   Main Content & Table
 --------------------------------------------- */
 .main-content {
-    display: none;
+    display: none; 
     max-width: 1100px;
     margin: 40px auto;
     padding: 0 20px;
@@ -96,25 +96,23 @@ body {
 
 h2 {
     text-align: center;
-    font-size: 1.6em;
-    color: #343a40;
     margin-bottom: 25px;
+    color: #333;
 }
 
-/* ---------------------------------------------
-   Task Board Table
---------------------------------------------- */
 .task-board-container {
     background-color: var(--card-bg);
     min-height: 390px;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow-x: auto; /* Scroll แนวนอนได้ถ้าตารางล้น */
 }
 
 .task-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px;
 }
 
 .task-table th, .task-table td {
@@ -125,227 +123,128 @@ h2 {
 
 .task-table th {
     background-color: #e9ecef;
-    font-weight: bold;
-    color: #343a40;
-}
-
-.task-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Take Job Button */
-.take-job-btn {
-    background: var(--success-color);
-    color: white;
-    padding: 8px 15px;
-    border-radius: var(--radius-sm);
-    border: none;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.take-job-btn:hover {
-    background: #2f9e44;
+    color: #333;
 }
 
 /* ---------------------------------------------
-   Modals (Login + Add Task)
+   Modals
 --------------------------------------------- */
-.modal, 
-#login-box.login {
+.des, .modal, #login-box.login {
     display: none;
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.45);
-    backdrop-filter: blur(5px);
+    z-index: 50;
     justify-content: center;
     align-items: center;
-    z-index: 50;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
 }
 
 #login-box.login {
-    display: flex; /* login visible by default */
+    display: flex;
+    background: linear-gradient(135deg, #007bff99, #ff4d8799);
 }
 
 .modal-content {
     background: white;
     width: 90%;
-    max-width: 480px;
-    padding: 35px 40px;
+    max-width: 450px;
+    padding: 30px;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-soft);
     position: relative;
-    animation: popUp 0.35s ease;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: popUp 0.3s ease;
 }
 
 @keyframes popUp {
-    from { transform: scale(0.92); opacity: 0; }
+    from { transform: scale(0.9); opacity: 0; }
     to   { transform: scale(1); opacity: 1; }
-}
-
-.modal-content label {
-    font-weight: 600;
-    margin-top: 10px;
 }
 
 .modal-content input {
     width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    transition: 0.2s;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box; 
 }
 
-.modal-content input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(76,110,245,0.25);
-    outline: none;
-}
-
-.close-btn {
-    font-size: 28px;
-    color: #666;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-}
-
-/* ---------------------------------------------
-   Buttons Global
---------------------------------------------- */
 .primary-btn {
     background: var(--primary-color);
     color: white;
-    padding: 12px 20px;
-    border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: 0.25s;
-}
-
-.primary-btn:hover {
-    background: #3b5bdb;
 }
 
 .secondary-btn {
     background: var(--secondary-color);
     color: white;
-    padding: 10px 18px;
-    border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
 }
 
-.secondary-btn:hover {
-    background: #5c636a;
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
 }
-/* --- Login Modal (New Style) --- */
 
-#login-box.login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    left: 0;
-    top: 0;
+#loginbtn, #signupbtn {
     width: 100%;
-    height: 100%;
-    z-index: 50;
-
-    /* colorful gradient background */
-    background: linear-gradient(135deg, #007bff99, #ff4d8799);
-    backdrop-filter: blur(6px);
-}
-
-/* Card */
-#login-box .modal-content {
-    width: 90%;
-    max-width: 420px;
-    padding: 45px 40px;
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 20px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
-    position: relative;
-    align-items: center;
-    animation: slideUp 0.45s ease;
-}
-
-/* Animation */
-@keyframes slideUp {
-    from { transform: translateY(40px); opacity: 0; }
-    to   { transform: translateY(0); opacity: 1; }
-}
-
-/* Title style (optional) */
-#login-box .modal-content h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-}
-
-/* Floating labels */
-#login-box .modal-content form label {
-    display: block;
-    color: #555;
-    margin-bottom: 6px;
-    font-weight: 600;
-    margin-top: 12px;
-}
-
-/* Inputs */
-#login-box .modal-content input {
-    width: 90%;
-    padding: 12px 15px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 2px solid #d7d9dd;
-    transition: 0.25s;
-    align-items: center;
-}
-
-#login-box .modal-content input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-    outline: none;
-}
-
-/* Buttons Shared */
-#loginbtn, 
-#signupbtn {
-    width: 100%;
-    padding: 12px;
-    margin-top: 14px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    transition: 0.25s ease;
+    font-weight: bold;
 }
+#loginbtn { background: #007bff; color: white; }
+#signupbtn { background: #e9ecef; color: #333; }
 
-/* Login Button – Neon style */
-#loginbtn {
-    background: #007bff;
-    color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.35);
-}
-#loginbtn:hover {
-    background: #005fcc;
-    box-shadow: 0 6px 18px rgba(0, 123, 255, 0.55);
-}
+/* ============================================
+   📱 RESPONSIVE MEDIA QUERIES
+   โค้ดด้านล่างจะทำงาน "เฉพาะ" บนมือถือ (จอเล็กกว่า 768px)
+   ============================================ */
 
-/* Signup Button – Soft grey */
-#signupbtn {
-    background: #e9ecef;
-    color: #333;
-}
-#signupbtn:hover {
-    background: #d8dadc;
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column; /* เรียงแนวตั้ง */
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .header h1 {
+        position: static; /* ยกเลิกการอยู่ตรงกลางแบบ PC */
+        transform: none;
+    }
+
+    /* ปรับกล่อง User Info ในมือถือ */
+    .user-info-box {
+        width: 100%;
+        flex-direction: column; /* เรียงชื่อกับปุ่มเป็นแนวตั้ง */
+        justify-content: center;
+        box-sizing: border-box;
+    }
+    
+    .user-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .small-btn {
+        flex: 1; /* ปุ่ม Logout/Change Pass ขยายเต็ม */
+    }
+
+    /* ปรับปุ่มเพิ่มงานให้เต็มจอในมือถือ */
+    .add-task-btn {
+        width: 100%;
+        text-align: center;
+    }
 }

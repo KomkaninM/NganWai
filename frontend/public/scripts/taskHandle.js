@@ -10,18 +10,22 @@ export async function handlecloseModalbtn() {
   document.querySelector(".modal").style.display = "none";
 }
 
+export async function handleclosedesbtn() {
+  document.querySelector(".des").style.display = "none";
+}
+ 
 export async function handleAddTaskForm() {
   const title = document.getElementById("task-title").value.trim();
   const location = document.getElementById("task-location").value.trim();
   const fee = document.getElementById("task-fee").value.trim();
   const deadline = document.getElementById("task-deadline").value;
+  const description = document.getElementById("task-description").value.trim();
   const user = getCurrentUser();
   if (!title || !location || !fee || !deadline || !user) {
     alert("Please enter all information");
     return;
   }
-
-  const payload = { title, location, fee: Number(fee), deadline ,user};
+  const payload = { title, location, fee: Number(fee), deadline ,description,user};
   try {
     await createTask(payload);
     alert("Task created!");

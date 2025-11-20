@@ -1,4 +1,4 @@
-import { createUser, getUser,login} from "./api.js";
+import { createUser, getUser,login,updateUser} from "./api.js";
 
 let currentUser = null; 
 
@@ -62,4 +62,45 @@ export async function handleUserLogout() {
 
 export function getCurrentUser() {
     return currentUser.username;
+}
+
+export async function handleUserChange() {
+  if (!currentUser) {
+    alert("No user is logged in.");
+    return;
+  }
+
+  const users = await getUser();
+  const username = currentUser.username; // get logged-in username
+
+  // Find user
+  const foundUser = users.find(user => user.username === username);
+  if (!foundUser) {
+    alert("User not found!");
+    return;
+  }
+
+  const password = document.getElementById("change-password").value;
+  if (!password) {
+    alert("Please enter a new password!");
+    return;
+  }
+
+  const id = foundUser._id; // <-- MongoDB uses _id
+  const updatedData = { password }; // only updating password
+
+  try {
+    const result = await updateUser(id, updatedData);
+    console.log("User updated:", result);
+    alert("Password updated successfully!");
+    document.getElementById("change-password").value = ""; // reset input
+  } catch (err) {
+    console.error(err);
+    alert("Failed to update password.");
+  }
+  document.querySelector(".des").style.display = "none"
+}
+
+export async function handleUserpassChangebtn() {
+  document.querySelector(".des").style.display = "flex"
 }
